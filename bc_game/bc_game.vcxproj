@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClInclude Include="inc\bc_camera.h" />
     <ClInclude Include="inc\bc_clut.h" />
+    <ClInclude Include="inc\bc_cmd.h" />
     <ClInclude Include="inc\bc_ints.h" />
     <ClInclude Include="inc\bc_log.h" />
     <ClInclude Include="inc\bc_mem_tracker.h" />
@@ -440,6 +441,7 @@
   <ItemGroup>
     <ClCompile Include="src\bc_camera.cpp" />
     <ClCompile Include="src\bc_clut.cpp" />
+    <ClCompile Include="src\bc_cmd.cpp" />
     <ClCompile Include="src\bc_log.cpp" />
     <ClCompile Include="src\bc_shader.cpp" />
     <ClCompile Include="src\bc_io.cpp" />
