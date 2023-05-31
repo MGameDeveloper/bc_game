@@ -139,12 +139,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="inc\bc_camera.h" />
     <ClInclude Include="inc\bc_clut.h" />
     <ClInclude Include="inc\bc_ints.h" />
     <ClInclude Include="inc\bc_log.h" />
     <ClInclude Include="inc\bc_mem_tracker.h" />
     <ClInclude Include="inc\bc_shader.h" />
     <ClInclude Include="inc\bc_io.h" />
+    <ClInclude Include="inc\bc_time.h" />
+    <ClInclude Include="inc\bc_transform.h" />
     <ClInclude Include="vendors\glad\include\glad\glad.h" />
     <ClInclude Include="vendors\glad\include\KHR\khrplatform.h" />
     <ClInclude Include="vendors\glfw3\include\GLFW\glfw3.h" />
@@ -434,10 +437,13 @@
     <ClInclude Include="vendors\stb\include\stb\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\bc_camera.cpp" />
     <ClCompile Include="src\bc_clut.cpp" />
     <ClCompile Include="src\bc_log.cpp" />
     <ClCompile Include="src\bc_shader.cpp" />
     <ClCompile Include="src\bc_io.cpp" />
+    <ClCompile Include="src\bc_time.cpp" />
+    <ClCompile Include="src\bc_transform.cpp" />
     <ClCompile Include="vendors\glad\src\glad.c" />
     <ClCompile Include="vendors\glm\include\glm\detail\glm.cpp" />
   </ItemGroup>
