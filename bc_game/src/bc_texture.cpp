@@ -3,6 +3,7 @@
 #include <stb/stb_image.h>
 #include "../inc/bc_texture.h"
 #include "../inc/bc_log.h"
+#include "../inc/bc_shader.h"
 
 namespace pool
 {
@@ -184,4 +185,31 @@ i32 bc_texture::idx_into_pool()
 		return 0;
 
 	return pool_idx;
+}
+
+void bc_texture::bind(bc_shader* shader)
+{
+	if (!shader)
+		return;
+
+#define TEXTURE_IDX(IDX) "textures["#IDX"]"
+
+	if (pool::should_rebind)
+	{
+		for (i32 idx = 0; idx < pool::count; ++idx)
+		{
+			if (pool::textures[idx].use_count > 0)
+			{
+				glActiveTexture(GL_TEXTURE0 + idx);
+				glBindTexture(GL_TEXTURE_2D, pool::textures[idx].id);
+
+				shader->set_int(TEXTURE_IDX(idx), pool::textures[idx].bound_idx);
+
+				bc_log::trace("[ bc_texture::bind ]: binding %s at %d", pool::textures[idx].path, idx);
+				bc_log::trace("[ bc_texture::bind ]: %s = %d", TEXTURE_IDX(idx), pool::textures[idx].id);
+			}
+		}
+	}
+
+#undef TEXTURE_IDX
 }

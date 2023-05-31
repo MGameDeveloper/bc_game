@@ -70,16 +70,20 @@ void bc_clut::bind(bc_shader* shader)
 	if (!shader || !colors)
 		return;
 
-	std::string clut_name(clut_array_name);
-	for (u32 clut_idx = 0; clut_idx < clut->clut_count; ++clut_idx)
+#define CLUT_IDX(CLUT_IDX, COLOR_IDX) "clut["#CLUT_IDX"]["#COLOR_IDX"]"
+
+	for (u32 clut_idx = 0; clut_idx < clut_count; ++clut_idx)
 	{
-		for (u32 color_idx = 0; color_idx < clut->color_count_per_clut; ++color_idx)
+		for (u32 color_idx = 0; color_idx < color_count_per_clut; ++color_idx)
 		{
-			std::string var(clut_name + "[" + std::to_string(clut_idx) + "][" + std::to_string(color_idx) + "]");
-	
-			bc_shader::set_4float(shader, var.c_str(), &clut->colors[clut_idx * clut->color_count_per_clut + color_idx][0]);
+			//std::string var(clut_name + "[" + std::to_string(clut_idx) + "][" + std::to_string(color_idx) + "]");
+			//bc_shader::set_4float(shader, var.c_str(), &clut->colors[clut_idx * clut->color_count_per_clut + color_idx][0]);
+
+			shader->set_4float(CLUT_IDX(clut_idx, color_idx), &colors[clut_idx * color_count_per_clut + color_idx][0]);
 		}
 	}
+
+#undef CLUT_IDX
 }
 
 void bc_clut::show_memory_consumption()

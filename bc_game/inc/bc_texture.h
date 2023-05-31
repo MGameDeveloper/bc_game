@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include "bc_ints.h"
 
+struct bc_shader;
+
 class bc_texture
 {
 private:
@@ -24,4 +26,6 @@ public:
 	i32         use_count();
 	const char* path();
 	i32         idx_into_pool();
+
+	static void bind(bc_shader* shader);
 };
