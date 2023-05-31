@@ -1,22 +1,27 @@
 #pragma once
 
+#include <glm/glm.hpp>
 #include "bc_ints.h"
 
-struct bc_texture
+class bc_texture
 {
-	const char *path        = NULL;
-	u32         id          = 0;
-	i32         bound_idx   = 0;
-	i32         use_count   = 0;
-	i32         width       = 0;
-	i32         height      = 0;
-	float       width_norm  = 0.0f;
-	float       height_norm = 0.0f;
+private:
+	i32 pool_idx = 0;
 
-	bc_texture();
+public:
+	bc_texture(const char* path);
 	~bc_texture();
-	bc_texture(const bc_texture&);
-	bc_texture(const bc_texture&&);
-	bc_texture& operator=(const bc_texture&);
-	bc_texture& operator=(const bc_texture&&);
+	
+	bc_texture()                              = default;
+	bc_texture(const bc_texture&)             = delete;
+	bc_texture(const bc_texture&&)            = delete;
+	bc_texture& operator=(const bc_texture&)  = delete;
+	bc_texture& operator=(const bc_texture&&) = delete;
+
+	glm::vec2   size();
+	glm::vec2   size_norm();
+	i32         idx();
+	i32         use_count();
+	const char* path();
+	i32         idx_into_pool();
 };
