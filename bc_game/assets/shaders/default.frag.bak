@@ -1,0 +1,19 @@
+#version 430 core
+
+out vec4 FragColor;
+
+in vec2  UV;
+in float Palatte_idx;
+in float Texture_idx;
+
+uniform vec4 palatte[8][4];
+
+uniform sampler2D textures[32];
+
+void main()
+{
+	float color_id = texture(textures[ int(Texture_idx) ], UV).r;
+	
+	FragColor = palatte[ int(Palatte_idx) ][ int(color_id * 4) ];
+	//FragColor = palatte[ int(Palatte_idx) ][ 0 ];
+}

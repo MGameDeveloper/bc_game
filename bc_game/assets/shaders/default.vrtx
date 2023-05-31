@@ -1,0 +1,30 @@
+#version 430 core
+layout (location = 0) in vec4  aColor;
+layout (location = 1) in vec3  aPos;
+layout (location = 2) in vec2  aUV;
+layout (location = 3) in float aPalatte_idx;
+layout (location = 4) in float aTexture_idx;
+layout (location = 5) in float aUse_sample;
+layout (location = 6) in float aText_sample_idx;
+layout (location = 7) in vec2  aSample_uv;
+
+out vec4  Color;
+out vec2  UV;
+out float Palatte_idx;
+out float Texture_idx;
+out float B_use_sample;
+out float Text_sample_idx;
+out vec2 Sample_uv;
+
+void main()
+{
+    gl_Position = vec4(aPos, 1.0);
+
+	Color           = aColor;
+    UV              = aUV;
+	Palatte_idx     = aPalatte_idx;
+	Texture_idx     = aTexture_idx;
+	B_use_sample    = aUse_sample;
+	Text_sample_idx = aText_sample_idx;
+	Sample_uv       = aSample_uv;
+}

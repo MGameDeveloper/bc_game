@@ -1,0 +1,17 @@
+#version 460 core
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec2 aUV;
+layout (location = 2) in float aPalatte_idx;
+layout (location = 3) in float aTexture_idx;
+
+out vec2  UV;
+out float Palatte_idx;
+out float Texture_idx;
+
+void main()
+{
+    gl_Position = vec4(aPos, 1.0);
+    UV          = aUV;
+	Palatte_idx = aPalatte_idx;
+	Texture_idx = aTexture_idx;
+}
