@@ -49,4 +49,5 @@ private:
 	bc_axis_key        *axis;
 
 public:
+	static void init();
 };
