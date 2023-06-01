@@ -909,6 +909,9 @@
     <ClInclude Include="inc\bc_cmd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="inc\bc_window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vendors\glad\src\glad.c">
@@ -942,6 +945,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\bc_cmd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bc_window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

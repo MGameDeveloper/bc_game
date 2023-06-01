@@ -150,6 +150,7 @@
     <ClInclude Include="inc\bc_texture.h" />
     <ClInclude Include="inc\bc_time.h" />
     <ClInclude Include="inc\bc_transform.h" />
+    <ClInclude Include="inc\bc_window.h" />
     <ClInclude Include="vendors\glad\include\glad\glad.h" />
     <ClInclude Include="vendors\glad\include\KHR\khrplatform.h" />
     <ClInclude Include="vendors\glfw3\include\GLFW\glfw3.h" />
@@ -448,6 +449,7 @@
     <ClCompile Include="src\bc_texture.cpp" />
     <ClCompile Include="src\bc_time.cpp" />
     <ClCompile Include="src\bc_transform.cpp" />
+    <ClCompile Include="src\bc_window.cpp" />
     <ClCompile Include="vendors\glad\src\glad.c" />
     <ClCompile Include="vendors\glm\include\glm\detail\glm.cpp" />
   </ItemGroup>
