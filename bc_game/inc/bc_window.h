@@ -12,6 +12,8 @@ private:
 	const char* title  = NULL;
 
 public:
+	static void poll_events();
+	
 	bc_window(const char* title, const glm::vec2& size, u32 gl_major_version = 4, u32 gl_minor_version = 6);
 	~bc_window();
 	bc_window(const bc_window&)             = delete;
@@ -26,8 +28,7 @@ public:
 
 	bool is_closing();
 	void swap_buffers();
-
 	void activate_as_current_context();
 
-	static void poll_events();
+	void onkey_callback(GLFWkeyfun key_callback);
 };

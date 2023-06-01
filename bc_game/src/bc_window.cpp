@@ -2,6 +2,11 @@
 #include "../inc/bc_window.h"
 #include "../inc/bc_log.h"
 
+static void local_window_error_callback(int error, const char* desc)
+{
+	bc_log::error("[ GLFW ]: %s", desc);
+}
+
 bc_window::bc_window(const char* title, const glm::vec2& size, u32 gl_major_version, u32 gl_minor_version)
 {
 	static bool glfw_initiated = false;
@@ -12,6 +17,8 @@ bc_window::bc_window(const char* title, const glm::vec2& size, u32 gl_major_vers
 			bc_log::error("[ bc_window::create( %s ) ]: glfw init failed");
 			return;
 		}
+
+		glfwSetErrorCallback(local_window_error_callback);
 		glfw_initiated = true;
 	}
 
@@ -78,4 +85,9 @@ void bc_window::poll_events()
 void bc_window::activate_as_current_context()
 {
 	glfwMakeContextCurrent(window);
+}
+
+void bc_window::onkey_callback(GLFWkeyfun key_callback)
+{
+	glfwSetKeyCallback(window, key_callback);
 }
