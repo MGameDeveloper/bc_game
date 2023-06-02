@@ -48,12 +48,21 @@ private:
 	};
 
 	bc_key_event_queue event_queue;
-	bc_key_detail      *key_detail_list;
-	bc_action_key      *action_list;
-	bc_axis_key        *axis_list;
-	bc_cmd             *cmds;
+	bc_key_detail      *key_detail_list = NULL;
+	bc_action_key      *action_list     = NULL;
+	bc_axis_key        *axis_list       = NULL;
+	bc_cmd             *cmds            = NULL;
 
 public:
+	bc_input(bc_cmd* input_cmds);
+	~bc_input();
+	
+	bc_input()                            = default;
+	bc_input(const bc_input&)             = delete;
+	bc_input(const bc_input&&)            = delete;
+	bc_input& operator=(const bc_input&)  = delete;
+	bc_input& operator=(const bc_input&&) = delete;
+
 	static void show_memory_consumtion();
 
 	void bind_action(ekey key, ekeystate state, ekeymod mods, const char* msg);
@@ -61,4 +70,6 @@ public:
 
 	void set_cmds(bc_cmd* input_cmds);
 	void process();
+
+	void on_key(ekey key, ekeystate state, ekeymod mods);
 };

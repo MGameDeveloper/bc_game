@@ -147,6 +147,7 @@
     <ClInclude Include="inc\bc_key.h" />
     <ClInclude Include="inc\bc_log.h" />
     <ClInclude Include="inc\bc_mem_tracker.h" />
+    <ClInclude Include="inc\bc_render.h" />
     <ClInclude Include="inc\bc_shader.h" />
     <ClInclude Include="inc\bc_io.h" />
     <ClInclude Include="inc\bc_texture.h" />

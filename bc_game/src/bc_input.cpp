@@ -9,6 +9,27 @@ void bc_input::show_memory_consumtion()
 	bc_mem.print_usage();
 }
 
+bc_input::bc_input(bc_cmd* input_cmds)
+{
+	cmds = input_cmds;
+}
+
+bc_input::~bc_input()
+{
+	bc_key_detail *key_detail = key_detail_list;
+	bc_action_key *action     = action_list;
+	bc_axis_key   *axis       = axis_list;
+
+	for (; key_detail; key_detail = key_detail->next)
+		bc_mem.dealloc(key_detail);
+
+	for (; action; action = action->next)
+		bc_mem.dealloc(action);
+
+	for (; axis; axis = axis->next)
+		bc_mem.dealloc(axis);
+}
+
 void bc_input::bind_action(ekey key, ekeystate state, ekeymod mods, const char* msg)
 {
 	bc_action_key *action = action_list;
@@ -164,4 +185,38 @@ void bc_input::process()
 	{
 		cmds->call(axes[idx].msg, axes[idx].scale);
 	}
+
+	bc_mem.zero(event_queue.key, sizeof(bc_key)* event_queue.count);
+	event_queue.idx = 0;
+}
+
+void bc_input::on_key(ekey key, ekeystate state, ekeymod mods)
+{
+	bc_key_detail *key_detail = key_detail_list;
+	for (; key_detail; key_detail = key_detail->next)
+	{
+		if (key_detail->key.code = key)
+		{
+			key_detail->key.state = state;
+			key_detail->key.mods  = mods;
+			return;
+		}
+	}
+
+	key_detail            = (bc_key_detail*)bc_mem.alloc(sizeof(bc_key_detail));
+	key_detail->key.code  = key;
+	key_detail->key.state = state;
+	key_detail->key.mods  = mods;
+	key_detail->next      = key_detail_list;
+	key_detail_list       = key_detail;
+
+	if (event_queue.idx < event_queue.count)
+	{
+		bc_key* key_event = &event_queue.key[event_queue.idx++];
+		key_event->code   = key;
+		key_event->state  = state;
+		key_event->mods   = mods;
+	}
+	else
+		bc_log::warning("[ bc_input::on_key ]: event_queue out of range");
 }

@@ -918,6 +918,9 @@
     <ClInclude Include="inc\bc_key.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="inc\bc_render.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vendors\glad\src\glad.c">
