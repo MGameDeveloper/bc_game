@@ -50,23 +50,6 @@ public:
 class bc_render
 {
 private:
-	//struct bc_vertex
-	//{
-	//	glm::vec4 color;
-	//	glm::vec3 pos;
-	//	glm::vec2 uv;
-	//	float     clut_id          = 0;
-	//	float     texture_id       = 0;
-	//	float     b_use_clut       = 0;
-	//	float     text_texture_idx = 0;
-	//	glm::vec2 text_texutre_uv;
-	//};
-	//
-	//struct bc_sprite
-	//{
-	//	bc_vertex v[4];
-	//};
-
 	struct bc_canvas
 	{
 		bc_sprite *sprites = NULL;
@@ -92,4 +75,6 @@ public:
 
 	void set_shader();
 	void set_camera();
+
+	void draw(bc_sprite& sprite);
 };
