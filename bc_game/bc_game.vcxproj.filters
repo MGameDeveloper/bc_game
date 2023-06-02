@@ -912,6 +912,12 @@
     <ClInclude Include="inc\bc_window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="inc\bc_input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\bc_key.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vendors\glad\src\glad.c">
@@ -948,6 +954,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\bc_window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bc_input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bc_key.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

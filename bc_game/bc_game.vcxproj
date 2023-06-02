@@ -142,7 +142,9 @@
     <ClInclude Include="inc\bc_camera.h" />
     <ClInclude Include="inc\bc_clut.h" />
     <ClInclude Include="inc\bc_cmd.h" />
+    <ClInclude Include="inc\bc_input.h" />
     <ClInclude Include="inc\bc_ints.h" />
+    <ClInclude Include="inc\bc_key.h" />
     <ClInclude Include="inc\bc_log.h" />
     <ClInclude Include="inc\bc_mem_tracker.h" />
     <ClInclude Include="inc\bc_shader.h" />
@@ -443,6 +445,8 @@
     <ClCompile Include="src\bc_camera.cpp" />
     <ClCompile Include="src\bc_clut.cpp" />
     <ClCompile Include="src\bc_cmd.cpp" />
+    <ClCompile Include="src\bc_input.cpp" />
+    <ClCompile Include="src\bc_key.cpp" />
     <ClCompile Include="src\bc_log.cpp" />
     <ClCompile Include="src\bc_shader.cpp" />
     <ClCompile Include="src\bc_io.cpp" />

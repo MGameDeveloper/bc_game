@@ -1,15 +1,18 @@
 #pragma once
 
 #include "bc_ints.h"
+#include "bc_key.h"
+
+struct bc_cmd;
 
 class bc_input
 {
 private:
 	struct bc_key
 	{
-		i32 key_code;
-		i32 key_state;
-		i32 mods;
+		ekey      code;
+		ekeystate state;
+		ekeymod   mods;
 	};
 
 	struct bc_key_detail
@@ -22,9 +25,7 @@ private:
 	{
 		bc_action_key *next;
 		const char    *msg;
-		i32            key_code;
-		i32            key_state;
-		i32            key_mods;
+		bc_key         key;
 	};
 
 	struct bc_axis_key
@@ -32,8 +33,8 @@ private:
 		bc_axis_key *next;
 		const char  *msg;
 		float        scale;
-		i32          key_code;
-		i32          key_mods;
+		ekey         code;
+		ekeymod      mods;
 	};
 
 	struct bc_key_event_queue
@@ -47,7 +48,14 @@ private:
 	bc_key_detail      *key_map;
 	bc_action_key      *actions;
 	bc_axis_key        *axis;
+	bc_cmd             *cmds;
 
 public:
-	static void init();
+	static void show_memory_consumtion();
+
+	void bind_action(ekey key, ekeystate state, ekeymod mods, const char* msg);
+	void bind_axis  (ekey key, ekeymod mods, const char* msg, float scale);
+
+	void set_cmds(bc_cmd* input_cmds);
+	void process();
 };
