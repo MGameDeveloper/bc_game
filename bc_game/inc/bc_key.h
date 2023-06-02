@@ -4,6 +4,7 @@
 
 enum ekeystate
 {
+	ekeystate_Unknown,
 	ekeystate_Press,
 	ekeystate_Release,
 	ekeystate_Repeat

@@ -33,8 +33,11 @@ private:
 		bc_axis_key *next;
 		const char  *msg;
 		float        scale;
-		ekey         code;
-		ekeymod      mods;
+		struct
+		{
+			ekey         code;
+			ekeymod      mods;
+		}key;
 	};
 
 	struct bc_key_event_queue
@@ -45,9 +48,9 @@ private:
 	};
 
 	bc_key_event_queue event_queue;
-	bc_key_detail      *key_map;
-	bc_action_key      *actions;
-	bc_axis_key        *axis;
+	bc_key_detail      *key_detail_list;
+	bc_action_key      *action_list;
+	bc_axis_key        *axis_list;
 	bc_cmd             *cmds;
 
 public:

@@ -121,15 +121,13 @@ ekey bc_key::get_key(i32 key)
 
 ekeymod bc_key::get_keymod(i32 mod)
 {
-	i32 m = -1;
+	i32 m = ekeymod_Unknown;
 	if (mod & GLFW_MOD_SHIFT)
 		m |= (i32)ekeymod_Shift;
 	if (mod & GLFW_MOD_CONTROL)
 		m |= (i32)ekeymod_Ctrl;
 	if (mod & GLFW_MOD_ALT)
 		m |= (i32)ekeymod_Alt;
-
-	ekeymod l = ekeymod_Shift | ekeymod_Alt | ekeymod_Ctrl;
 
 	return ekeymod(m);
 }
