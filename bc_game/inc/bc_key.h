@@ -153,7 +153,7 @@ enum ekeymod
 class bc_key
 {
 public:
-	static bool init();
+	static void init();
 	static ekey get_key(i32 key);
 	static ekeymod get_keymod(i32 mod);
 };

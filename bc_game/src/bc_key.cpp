@@ -5,7 +5,7 @@
 
 static ekey key_map[GLFW_KEY_LAST];
 
-bool bc_key::init()
+void bc_key::init()
 {
 	static bool keys_initialized = false;
 	if (!keys_initialized)

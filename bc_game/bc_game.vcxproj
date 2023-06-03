@@ -443,12 +443,14 @@
     <ClInclude Include="vendors\stb\include\stb\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="src\bc_camera.cpp" />
     <ClCompile Include="src\bc_clut.cpp" />
     <ClCompile Include="src\bc_cmd.cpp" />
     <ClCompile Include="src\bc_input.cpp" />
     <ClCompile Include="src\bc_key.cpp" />
     <ClCompile Include="src\bc_log.cpp" />
+    <ClCompile Include="src\bc_render.cpp" />
     <ClCompile Include="src\bc_shader.cpp" />
     <ClCompile Include="src\bc_io.cpp" />
     <ClCompile Include="src\bc_texture.cpp" />

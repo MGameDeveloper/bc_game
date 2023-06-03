@@ -1,6 +1,7 @@
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb/stb_image.h>
 #include <string.h>
 #include <glad/glad.h>
-#include <stb/stb_image.h>
 #include "../inc/bc_texture.h"
 #include "../inc/bc_log.h"
 #include "../inc/bc_shader.h"

@@ -92,7 +92,7 @@ void bc_cmd::replace_axis(const char* msg, axis_callback_t axis)
 	bc_log::warning("[ bc_cmd::add ]: couldn't find %s cmd to replace consider bc_cmd::add instead", msg);
 }
 
-void bc_cmd::call(const char* msg, float scale = 0)
+void bc_cmd::call(const char* msg, float scale)
 {
 	cmd* c = list;
 	for (; c; c = c->next)

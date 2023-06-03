@@ -6,6 +6,18 @@
 
 struct bc_shader;
 struct bc_camera;
+struct bc_texture;
+
+struct bc_color
+{
+	glm::vec4 color;
+	
+	bc_color(u8 r, u8 g, u8 b, u8 a)
+	{
+		static float f = 1.f / 255.f;
+		color = glm::vec4(r * f, g * f, b * f, a * f);
+	}
+};
 
 class bc_render
 {
@@ -15,11 +27,11 @@ private:
 		glm::vec4 color;
 		glm::vec3 pos;
 		glm::vec2 uv;
-		float     clut_id = 0;
-		float     texture_id = 0;
-		float     b_use_clut = 0;
-		float     text_texture_idx = 0;
-		glm::vec2 text_texutre_uv;
+		float     clut_id            = 0;
+		float     texture_id         = 0;
+		float     b_text_use_texture = 0;
+		float     text_texture_id    = 0;
+		glm::vec2 text_texture_uv;
 	};
 
 	struct bc_sprite
@@ -34,12 +46,12 @@ private:
 		i32        idx     = 0;
 	};
 
-	bc_camera* m_camera;
-	bc_shader* m_shader;
-	bc_canvas  m_canvas;
-	u32        m_vao;
-	u32        m_vbo;
-	u32        m_ebo;
+	bc_camera *m_camera = NULL;
+	bc_shader *m_shader = NULL;
+	bc_canvas *m_canvas = NULL;
+	u32        m_vao    = 0;
+	u32        m_vbo    = 0;
+	u32        m_ebo    = 0;
 
 public:
 	bc_render(u32 max_sprite_count);
@@ -53,5 +65,25 @@ public:
 	void set_shader(bc_shader* shader);
 	void set_camera(bc_camera* camera);
 
-	void draw(bc_transform* trans)
+	void draw_sprite(bc_transform* trans, 
+		const glm::vec2& uv_pos, 
+		const glm::vec2& uv_size,
+		bc_texture* texture,
+		u32 clut_id,
+		const bc_color& color = bc_color(255, 255, 255, 255));
+	
+	void draw_text(bc_transform* trans, 
+		const glm::vec2& uv_pos, 
+		const glm::vec2& uv_size,
+		bc_texture* font,
+		u32 clut_id, 
+		const bc_color& color = bc_color(255, 255, 255, 255),
+		bc_texture* texture = NULL,
+		const glm::vec2& texture_uv = glm::vec2(0.f));
+
+	void clear(u8 r, u8 g, u8 b, u8 a);
+	void submit();
+
+	static void init();
+	static void show_memory_consumtion();
 };
