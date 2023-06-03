@@ -34,7 +34,7 @@ bc_window::bc_window(const char* title, const glm::vec2& size, u32 gl_major_vers
 
 	this->title = title;
 
-	//glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(window);
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 }
 
