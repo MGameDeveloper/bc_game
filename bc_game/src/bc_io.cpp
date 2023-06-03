@@ -17,7 +17,7 @@ static long io_filesize(FILE* file)
 		bc_log::error("io_filesize failed");
 	}
 
-	return file_size;
+	return file_size + 1;
 }
 
 static const char* io_alloc(size_t file_size)

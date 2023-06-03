@@ -1,6 +1,45 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "../inc/bc_transform.h"
 
+bc_transform::bc_transform()
+{
+
+}
+
+bc_transform::~bc_transform()
+{
+
+}
+
+glm::vec3 bc_transform::get_position()
+{
+	return m_position;
+}
+
+glm::vec3 bc_transform::get_scale()
+{
+	return m_scale;
+}
+
+glm::vec3 bc_transform::get_size()
+{
+	return m_size;
+}
+
+glm::vec3 bc_transform::get_rotate_axis()
+{
+	return m_rotate_axis;
+}
+
+float bc_transform::get_rotate_angle()
+{
+	return m_rotate_angle;
+}
+
+void bc_transform::set_size(const glm::vec3& size)
+{
+	m_size = size;
+}
 
 void bc_transform::translate(const glm::vec3& pos)
 {

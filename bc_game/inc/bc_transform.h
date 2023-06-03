@@ -5,10 +5,11 @@
 class bc_transform
 {
 private:
-	glm::vec3 m_position;
-	glm::vec3 m_rotate_axis;
-	glm::vec3 m_scale;
-	float     m_rotate_angle;
+	glm::vec3 m_position     = glm::vec3(0.f);
+	glm::vec3 m_size         = glm::vec3(8.f, 8.f, 0.f);
+	glm::vec3 m_rotate_axis  = glm::vec3(0.f);
+	glm::vec3 m_scale        = glm::vec3(1.f);
+	float     m_rotate_angle = 0.f;
 
 public:
 	bc_transform();
@@ -20,12 +21,11 @@ public:
 
 	glm::vec3 get_position();
 	glm::vec3 get_scale();
+	glm::vec3 get_size();
 	glm::vec3 get_rotate_axis();
 	float     get_rotate_angle();
+	void      set_size(const glm::vec3& size);
 
-	void set_position(const glm::vec3& position);
-	void set_scale(const glm::vec3& scale);
-	
 	void translate(const glm::vec3& pos);
 	void rotate(const glm::vec3& axis, float angle);
 	void scale(const glm::vec3& scale);

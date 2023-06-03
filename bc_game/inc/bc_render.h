@@ -7,49 +7,26 @@
 struct bc_shader;
 struct bc_camera;
 
-class bc_sprite
+class bc_render
 {
 private:
-	friend class bc_render;
-
 	struct bc_vertex
 	{
 		glm::vec4 color;
 		glm::vec3 pos;
 		glm::vec2 uv;
-		float     clut_id          = 0;
-		float     texture_id       = 0;
-		float     b_use_clut       = 0;
+		float     clut_id = 0;
+		float     texture_id = 0;
+		float     b_use_clut = 0;
 		float     text_texture_idx = 0;
 		glm::vec2 text_texutre_uv;
 	};
 
-	bc_vertex v[4];
+	struct bc_sprite
+	{
+		bc_vertex v[4];
+	};
 
-public:
-	bc_transform transform;
-
-public:
-	bc_sprite();
-	~bc_sprite();
-	bc_sprite(const bc_sprite&)             = delete;
-	bc_sprite(const bc_sprite&&)            = delete;
-	bc_sprite& operator=(const bc_sprite&)  = delete;
-	bc_sprite& operator=(const bc_sprite&&) = delete;
-
-	void set_color   (const glm::vec4& color);
-	void set_texture (u32 texture_id);
-	void set_uv      (const glm::vec2& uv);
-	void set_clut    (u32 clut_id);
-	
-	void set_text_texture(u32 texture_id);
-	void set_text_texture_uv(const glm::vec2& uv);
-};
-
-
-class bc_render
-{
-private:
 	struct bc_canvas
 	{
 		bc_sprite *sprites = NULL;
@@ -73,8 +50,8 @@ public:
 	bc_render& operator=(const bc_render&)  = delete;
 	bc_render& operator=(const bc_render&&) = delete;
 
-	void set_shader();
-	void set_camera();
+	void set_shader(bc_shader* shader);
+	void set_camera(bc_camera* camera);
 
-	void draw(bc_sprite& sprite);
+	void draw(bc_transform* trans)
 };
