@@ -22,7 +22,7 @@ namespace pool
 
 	static bc_texture_data textures[32];
 	static i32             idx           = 0;
-	static i32             count         = 0;
+	static i32             count         = 32;
 	static bool            should_rebind = false;
 
 	static i32 load(const char* path)
@@ -131,7 +131,7 @@ bc_texture::bc_texture(const char* path)
 {
 	pool_idx = pool::load(path);
 	if (pool_idx == -1)
-		bc_log::error("[ bc_texture( %s ) ]: failed");
+		bc_log::error("[ bc_texture( %s ) ]: failed", path);
 }
 
 bc_texture::~bc_texture()
@@ -193,7 +193,7 @@ void bc_texture::bind(bc_shader* shader)
 	if (!shader)
 		return;
 
-#define TEXTURE_IDX(IDX) "textures["#IDX"]"
+	static char texture_element[256];
 
 	if (pool::should_rebind)
 	{
@@ -204,13 +204,16 @@ void bc_texture::bind(bc_shader* shader)
 				glActiveTexture(GL_TEXTURE0 + idx);
 				glBindTexture(GL_TEXTURE_2D, pool::textures[idx].id);
 
-				shader->set_int(TEXTURE_IDX(idx), pool::textures[idx].bound_idx);
+				memset(texture_element, 0, 256);
+				sprintf_s(texture_element, "textures[%d]", idx);
+
+				shader->set_int(texture_element, pool::textures[idx].bound_idx);
 
 				bc_log::trace("[ bc_texture::bind ]: binding %s at %d", pool::textures[idx].path, idx);
-				bc_log::trace("[ bc_texture::bind ]: %s = %d", TEXTURE_IDX(idx), pool::textures[idx].id);
+				bc_log::trace("[ bc_texture::bind ]: %s = %d", texture_element, pool::textures[idx].id);
 			}
 		}
-	}
 
-#undef TEXTURE_IDX
+		pool::should_rebind = false;
+	}
 }

@@ -250,7 +250,7 @@ void bc_render::submit()
 	glBindVertexArray(0);
 
 	// clear sprite canvas for the next frame
-	bc_mem.zero(m_canvas, sizeof(bc_sprite) * m_canvas->count);
+	bc_mem.zero(m_canvas->sprites, sizeof(bc_sprite) * m_canvas->count);
 	m_canvas->idx = 0;
 }
 
