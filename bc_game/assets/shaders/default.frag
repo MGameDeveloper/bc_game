@@ -16,7 +16,7 @@ uniform sampler2D textures[32];
 void main()
 {
     float color_id = texture(textures[ int(Texture_idx) ], UV).r;	
-
+	
     if(B_use_sample > 0.1f)
 	{
 	    float pixel_r = texture(textures[int(Text_sample_idx)], Sample_uv).r;
@@ -24,13 +24,11 @@ void main()
 		{
 		    FragColor     = clut[ int(Palatte_idx) ][ int(pixel_r * 4) ];
 		}
-		//else
-		//{
-		    //FragColor = vec4(0.f, 0.f, 0.f, 0.f);
-		//}
 	}
 	else
 	{
-		FragColor = clut[ int(Palatte_idx) ][ int(color_id * 4) ];
+		FragColor = clut[ int(Palatte_idx) ][ int(color_id * 4) ] * Color;
 	}	
+
+	//FragColor = Color;
 }

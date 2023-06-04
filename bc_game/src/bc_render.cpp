@@ -3,6 +3,7 @@
 #include "../inc/bc_texture.h"
 #include "../inc/bc_mem_tracker.h"
 #include "../inc/bc_camera.h"
+#include "../inc/bc_shader.h"
 
 static bc_memory_tracker_s bc_mem("[ BC_RENDER ]");
 
@@ -201,7 +202,7 @@ void bc_render::draw_sprite(bc_transform* trans,
 		s->v[0].pos = pvm * glm::vec4(trans->get_position(), 1.f);
 		s->v[1].pos = pvm * glm::vec4(trans->get_position() + glm::vec3(trans->get_size().x, 0.f, 0.f), 1.f);
 		s->v[2].pos = pvm * glm::vec4(trans->get_position() + glm::vec3(trans->get_size().x, trans->get_size().y, 0.f), 1.f);
-		s->v[2].pos = pvm * glm::vec4(trans->get_position() + glm::vec3(0.f, trans->get_size().y, 0.f), 1.f);
+		s->v[3].pos = pvm * glm::vec4(trans->get_position() + glm::vec3(0.f, trans->get_size().y, 0.f), 1.f);
 
 		m_canvas->idx = idx;
 	}
@@ -235,6 +236,8 @@ void bc_render::submit()
 		bc_log::warning("[ bc_render::submit() ]: m_shader is NULL");
 		return;
 	}
+	else
+		m_shader->bind();
 
 	bc_texture::bind(m_shader);
 

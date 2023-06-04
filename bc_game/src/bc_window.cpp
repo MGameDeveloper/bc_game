@@ -22,6 +22,7 @@ bc_window::bc_window(const char* title, const glm::vec2& size, u32 gl_major_vers
 		glfw_initiated = true;
 	}
 
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl_major_version);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_minor_version);
 

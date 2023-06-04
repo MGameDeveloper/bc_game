@@ -26,12 +26,14 @@ enum bc_clut_e
 int main(int argc, const char** argv)
 {
 	bc_window window("BattleCity", { 1200, 800 });
-	bc_camera camera(1200, 800, -10, 1000);
+	bc_camera camera(256, 224, -10, 1000);
 	bc_shader shader("assets/shaders/default.vrtx", "assets/shaders/default.frag");
 	bc_render render(2000);
+	bc_clut   clut(8, 4);
+	
 	render.set_shader(&shader);
 	render.set_camera(&camera);
-	bc_clut clut(8, 4);
+	
 	clut.set_color(clut_brick, 0, glm::vec4());
 	clut.set_color(clut_brick, 1, glm::vec4(203, 77, 12, 255));
 	clut.set_color(clut_brick, 2, glm::vec4(166, 0, 0, 255));
@@ -80,7 +82,7 @@ int main(int argc, const char** argv)
 		bc_window::poll_events();
 		
 		render.clear(50, 50, 50, 255);
-		render.draw_sprite(&tran, { 0, 0 }, { 8, 8 }, &brick_texture, 0);
+		render.draw_sprite(&tran, { 0, 0 }, { 8, 8 }, &brick_texture, 0, bc_color(255, 0, 0, 255));
 
 		clut.bind(&shader);
 		render.submit();
