@@ -21,6 +21,8 @@ enum bc_clut_e
 	clut_green_tank,
 	clut_gray_tank,
 	clut_red_tank,
+
+	clut_count,
 };
 
 int main(int argc, const char** argv)
@@ -75,14 +77,32 @@ int main(int argc, const char** argv)
 	clut.set_color(clut_red_tank, 3, glm::vec4(255., 255.f, 255.f, 255.f));
 
 	bc_transform tran;
-	bc_texture brick_texture("assets/textures/bc_brick_tile.png");
+	bc_texture   brick_texture("assets/textures/bc_brick_tile.png");
+	bc_time      time;
 
 	while (!window.is_closing())
 	{
+		time.update();
+
 		bc_window::poll_events();
 		
 		render.clear(50, 50, 50, 255);
-		render.draw_sprite(&tran, { 0, 0 }, { 8, 8 }, &brick_texture, 0, bc_color(255, 0, 0, 255));
+
+		glm::vec3 pos(0.f);
+		for (i32 y = 0; y < 28; ++y)
+		{
+			for (i32 x = 0; x < 32; ++x)
+			{
+				tran.translate(pos);
+				render.draw_sprite(&tran, { 0, 0 }, { 8, 8 }, &brick_texture, clut_brick);
+				
+				pos.x += 8;
+			}
+
+			pos.x  = 0;
+			pos.y += 8;
+		}
+
 
 		clut.bind(&shader);
 		render.submit();
