@@ -30,7 +30,7 @@ int main(int argc, const char** argv)
 	bc_window window("BattleCity", { 1200, 800 });
 	bc_camera camera(256, 224, -10, 1000);
 	bc_shader shader("assets/shaders/default.vrtx", "assets/shaders/default.frag");
-	bc_render render(2000);
+	bc_render render(100000);
 	bc_clut   clut(8, 4);
 	
 	render.set_shader(&shader);
@@ -80,6 +80,8 @@ int main(int argc, const char** argv)
 	bc_texture   brick_texture("assets/textures/bc_brick_tile.png");
 	bc_time      time;
 
+	tran.set_size(glm::vec3(2.f));
+
 	while (!window.is_closing())
 	{
 		time.update();
@@ -89,18 +91,20 @@ int main(int argc, const char** argv)
 		render.clear(50, 50, 50, 255);
 
 		glm::vec3 pos(0.f);
-		for (i32 y = 0; y < 28; ++y)
+		glm::vec2 view_size(camera.get_view_size().x / tran.get_size().x, camera.get_view_size().y / tran.get_size().y);
+
+		for (i32 y = 0; y < view_size.y; ++y)
 		{
-			for (i32 x = 0; x < 32; ++x)
+			for (i32 x = 0; x < view_size.x; ++x)
 			{
 				tran.translate(pos);
-				render.draw_sprite(&tran, { 0, 0 }, { 8, 8 }, &brick_texture, clut_brick);
+				render.draw_sprite(&tran, { 0, 0 }, { 8, 8 }, NULL, clut_brick, bc_color(rand() % 255, rand() % 255, rand() % 255, 255));
 				
-				pos.x += 8;
+				pos.x += tran.get_size().x;
 			}
 
 			pos.x  = 0;
-			pos.y += 8;
+			pos.y += tran.get_size().y;
 		}
 
 

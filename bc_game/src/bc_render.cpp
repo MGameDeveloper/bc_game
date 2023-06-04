@@ -142,8 +142,8 @@ void bc_render::draw_sprite(bc_transform* trans,
 
 	if (!texture)
 	{
-		bc_log::warning("[ bc_render::draw_sprite( ... ) ]: texture param is not valid");
-		return;
+		//bc_log::warning("[ bc_render::draw_sprite( ... ) ]: texture param is not valid");
+		//return;
 	}
 
 	if (!m_camera)
@@ -159,10 +159,6 @@ void bc_render::draw_sprite(bc_transform* trans,
 	{
 		bc_sprite* s = &m_canvas->sprites[idx++];
 
-		glm::vec2 local_size    = trans->get_size() * trans->get_scale();
-		glm::vec2 local_uv_pos  = { uv_pos.x * texture->size_norm().x, uv_pos.y * texture->size_norm().y };
-		glm::vec2 local_uv_size = { uv_size.x * texture->size_norm().x, uv_size.y * texture->size_norm().y };
-
 		s->v[0].color = color.color;
 		s->v[1].color = color.color;
 		s->v[2].color = color.color;
@@ -172,11 +168,6 @@ void bc_render::draw_sprite(bc_transform* trans,
 		s->v[1].clut_id = clut_id;
 		s->v[2].clut_id = clut_id;
 		s->v[3].clut_id = clut_id;
-
-		s->v[0].texture_id = texture->idx();
-		s->v[1].texture_id = texture->idx();
-		s->v[2].texture_id = texture->idx();
-		s->v[3].texture_id = texture->idx();
 
 		s->v[0].b_text_use_texture = false;
 		s->v[1].b_text_use_texture = false;
@@ -193,22 +184,29 @@ void bc_render::draw_sprite(bc_transform* trans,
 		s->v[2].text_texture_uv = glm::vec2(0.f);
 		s->v[3].text_texture_uv = glm::vec2(0.f);
 
-		s->v[0].uv = local_uv_pos;
-		s->v[1].uv = glm::vec2(local_uv_pos.x + local_uv_size.x, local_uv_pos.y);
-		s->v[2].uv = glm::vec2(local_uv_pos.x + local_uv_size.x, local_uv_pos.y + local_uv_size.y);
-		s->v[3].uv = glm::vec2(local_uv_pos.x, local_uv_pos.y + local_uv_size.y);
+		if (texture)
+		{
+			glm::vec2 local_uv_pos = { uv_pos.x * texture->size_norm().x, uv_pos.y * texture->size_norm().y };
+			glm::vec2 local_uv_size = { uv_size.x * texture->size_norm().x, uv_size.y * texture->size_norm().y };
 
-		glm::mat4 pvm = m_camera->get_pv_matrix() * trans->get_model_matrix();
-		//s->v[0].pos = /*pvm */ glm::vec4(trans->get_position(), 1.f);
-		//s->v[1].pos = /*pvm */ glm::vec4(trans->get_position() + glm::vec3(trans->get_size().x, 0.f, 0.f), 1.f);
-		//s->v[2].pos = /*pvm */ glm::vec4(trans->get_position() + glm::vec3(trans->get_size().x, trans->get_size().y, 0.f), 1.f);
-		//s->v[3].pos = /*pvm */ glm::vec4(trans->get_position() + glm::vec3(0.f, trans->get_size().y, 0.f), 1.f);
+			s->v[0].uv = local_uv_pos;
+			s->v[1].uv = glm::vec2(local_uv_pos.x + local_uv_size.x, local_uv_pos.y);
+			s->v[2].uv = glm::vec2(local_uv_pos.x + local_uv_size.x, local_uv_pos.y + local_uv_size.y);
+			s->v[3].uv = glm::vec2(local_uv_pos.x,                   local_uv_pos.y + local_uv_size.y);
 
+			s->v[0].texture_id = texture->idx();
+			s->v[1].texture_id = texture->idx();
+			s->v[2].texture_id = texture->idx();
+			s->v[3].texture_id = texture->idx();
+		}
+
+		glm::vec2 local_size = trans->get_size() * trans->get_scale();
+		glm::mat4 pvm       = m_camera->get_pv_matrix() * trans->get_model_matrix();
 		// last param of glm::vec4 must be 1.f
-		s->v[0].pos = pvm * glm::vec4(0.f, 0.f, 0.f, 1.f);
-		s->v[1].pos = pvm * glm::vec4(local_size.x, 0.f, 0.f, 1.f);
+		s->v[0].pos = pvm * glm::vec4(0.f, 0.f,     0.f,               1.f);
+		s->v[1].pos = pvm * glm::vec4(local_size.x, 0.f,          0.f, 1.f);
 		s->v[2].pos = pvm * glm::vec4(local_size.x, local_size.y, 0.f, 1.f);
-		s->v[3].pos = pvm * glm::vec4(0.f, local_size.y, 0.f, 1.f);
+		s->v[3].pos = pvm * glm::vec4(0.f,          local_size.y, 0.f, 1.f);
 
 		m_canvas->idx = idx;
 	}
