@@ -220,15 +220,136 @@ void bc_render::draw_sprite(bc_transform* trans,
 		bc_log::error("[ bc_render::draw_sprite( ... ) ]: m_canvas out of memory");
 }
 
-void bc_render::draw_text(bc_transform* trans,
-	const bc_uv& uv,
+void bc_render::draw_text(const char* text,
+	u32 font_size,
+	bc_transform* trans,
 	bc_texture* font,
 	u32 clut_id,
 	const bc_color& color,
 	bc_texture* texture,
 	const bc_uv& texture_uv)
 {
+	if (!m_canvas)
+	{
+		bc_log::error("[ bc_render::draw_sprite( %s ) ]: m_canvas is not valid");
+		return;
+	}
 
+	if (!trans)
+	{
+		bc_log::warning("[ bc_render::draw_sprite( ... ) ]: transform param is not valid");
+		return;
+	}
+
+	if (!m_camera)
+	{
+		bc_log::error("[ bc_render::draw_sprite( ... ) ]: m_camera is not valid");
+		return;
+	}
+
+	if (!text)
+		return;
+
+	bc_transform local_tran;
+	glm::vec2    offset;
+	glm::vec3    original_pos = trans->get_position();
+	glm::vec2    size         = trans->get_size();
+	i32          letter       = 0;
+	i32          txt_len      = strlen(text);
+	u32          font_width   = font->size().x / font_size;
+	
+	for (i32 letter_idx = 0; letter_idx < txt_len; ++letter_idx)
+	{
+		letter = text[letter_idx];
+		if (letter == '\n')
+		{
+			original_pos.x  = trans->get_position().x;
+			original_pos.y += size.y * trans->get_scale().y;
+			continue;
+		}
+		else if (letter == '\t')
+		{
+			original_pos.x += ((size.x * trans->get_scale().x) * 4);
+			continue;
+		}
+
+		offset.x = (u32)(letter % font_width) * font_size;
+		offset.y = (u32)(letter / font_width) * font_size;
+		bc_uv uv(offset.x * font->size_norm().x, offset.y * font->size_norm().y, font->size_norm().x * font_size, font->size_norm().y * font_size);
+
+		local_tran.translate(original_pos);
+
+		// drawing letter sprite
+		u32 idx = m_canvas->idx;
+		u32 count = m_canvas->count;
+
+		if (idx < count)
+		{
+			bc_sprite* s = &m_canvas->sprites[idx++];
+
+			s->v[0].color = color.color;
+			s->v[1].color = color.color;
+			s->v[2].color = color.color;
+			s->v[3].color = color.color;
+
+			s->v[0].clut_id = clut_id;
+			s->v[1].clut_id = clut_id;
+			s->v[2].clut_id = clut_id;
+			s->v[3].clut_id = clut_id;
+
+			// if we need to sample from texture instead of font
+			if (texture)
+			{
+				s->v[0].b_text_use_texture = true;
+				s->v[1].b_text_use_texture = true;
+				s->v[2].b_text_use_texture = true;
+				s->v[3].b_text_use_texture = true;
+
+				s->v[0].text_texture_id = texture->idx();
+				s->v[1].text_texture_id = texture->idx();
+				s->v[2].text_texture_id = texture->idx();
+				s->v[3].text_texture_id = texture->idx();
+
+				glm::vec2 local_uv_pos  = { texture_uv.pos.x  * texture->size_norm().x, texture_uv.pos.y  * texture->size_norm().y };
+				glm::vec2 local_uv_size = { texture_uv.size.x * texture->size_norm().x, texture_uv.size.y * texture->size_norm().y };
+
+				s->v[0].text_texture_uv = local_uv_pos;
+				s->v[1].text_texture_uv = glm::vec2(local_uv_pos.x + local_uv_size.x, local_uv_pos.y);
+				s->v[2].text_texture_uv = glm::vec2(local_uv_pos.x + local_uv_size.x, local_uv_pos.y + local_uv_size.y);
+				s->v[3].text_texture_uv = glm::vec2(local_uv_pos.x,                   local_uv_pos.y + local_uv_size.y);
+			}
+
+			if (font)
+			{
+				glm::vec2 local_uv_pos  = { uv.pos.x  , uv.pos.y  };
+				glm::vec2 local_uv_size = { uv.size.x , uv.size.y };
+
+				s->v[0].uv = local_uv_pos;
+				s->v[1].uv = glm::vec2(local_uv_pos.x + local_uv_size.x, local_uv_pos.y);
+				s->v[2].uv = glm::vec2(local_uv_pos.x + local_uv_size.x, local_uv_pos.y + local_uv_size.y);
+				s->v[3].uv = glm::vec2(local_uv_pos.x,  local_uv_pos.y + local_uv_size.y);
+
+				s->v[0].texture_id = font->idx();
+				s->v[1].texture_id = font->idx();
+				s->v[2].texture_id = font->idx();
+				s->v[3].texture_id = font->idx();
+			}
+
+			glm::vec2 local_size = trans->get_size() * trans->get_scale();
+			glm::mat4 pvm = m_camera->get_pv_matrix() * local_tran.get_model_matrix();
+			// last param of glm::vec4 must be 1.f
+			s->v[0].pos = pvm * glm::vec4(0.f, 0.f, 0.f, 1.f);
+			s->v[1].pos = pvm * glm::vec4(local_size.x, 0.f, 0.f, 1.f);
+			s->v[2].pos = pvm * glm::vec4(local_size.x, local_size.y, 0.f, 1.f);
+			s->v[3].pos = pvm * glm::vec4(0.f, local_size.y, 0.f, 1.f);
+
+			m_canvas->idx = idx;
+		}
+		else
+			bc_log::error("[ bc_render::draw_text( %s ) ]: m_canvas out of memory", text);
+
+		original_pos.x += size.x * trans->get_scale().x;
+	}
 }
 
 void bc_render::clear(u8 r, u8 g, u8 b, u8 a)

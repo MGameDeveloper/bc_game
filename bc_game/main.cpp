@@ -32,10 +32,10 @@ int main(int argc, const char** argv)
 	bc_shader shader("assets/shaders/default.vrtx", "assets/shaders/default.frag");
 	bc_render render(100000);
 	bc_clut   clut(8, 4);
-	
+
 	bc_render::enable_blend(true);
 	bc_render::enable_debug_output(true);
-	bc_texture::init(); // create a dumb texture 
+	bc_texture::init();
 
 	render.set_shader(&shader);
 	render.set_camera(&camera);
@@ -82,9 +82,14 @@ int main(int argc, const char** argv)
 
 	bc_transform tran;
 	bc_texture   brick_texture("assets/textures/bc_brick_tile.png");
+	bc_texture   nes_font("assets/fonts/nes.png");
 	bc_time      time;
+	bc_cmd       cmds;
+	bc_input     input(&cmds);
 
-	tran.set_size(glm::vec3(1.f));
+	
+	tran.set_size(glm::vec3(8.f));
+	tran.scale(glm::vec3(4.f));
 
 	while (!window.is_closing())
 	{
@@ -94,25 +99,30 @@ int main(int argc, const char** argv)
 		
 		render.clear(0, 0, 0, 255);
 
-		glm::vec3 pos(0.f);
-		glm::vec2 view_size(camera.get_view_size().x / tran.get_size().x, camera.get_view_size().y / tran.get_size().y);
+		//glm::vec3 pos(0.f);
+		//glm::vec2 view_size(camera.get_view_size().x / tran.get_size().x, camera.get_view_size().y / tran.get_size().y);
+		//
+		//for (i32 y = 0; y < view_size.y; ++y)
+		//{
+		//	for (i32 x = 0; x < view_size.x; ++x)
+		//	{
+		//		tran.translate(pos);
+		//
+		//		bc_color rand_color(rand() % 255, rand() % 255, rand() % 255, 255);
+		//		//render.draw_sprite(&tran, bc_uv(0.f, 0.f, 8.f, 8.f), NULL, 0, rand_color);
+		//		render.draw_sprite(&tran, bc_uv(0.f, 0.f, 8.f, 8.f), &brick_texture, 0, rand_color);
+		//		
+		//		pos.x += tran.get_size().x;
+		//	}
+		//
+		//	pos.x  = 0;
+		//	pos.y += tran.get_size().y;
+		//}
 
-		for (i32 y = 0; y < view_size.y; ++y)
-		{
-			for (i32 x = 0; x < view_size.x; ++x)
-			{
-				tran.translate(pos);
-
-				bc_color rand_color(rand() % 255, rand() % 255, rand() % 255, 255);
-				render.draw_sprite(&tran, bc_uv(0.f, 0.f, 8.f, 8.f), NULL, 0, rand_color);
-				
-				pos.x += tran.get_size().x;
-			}
-
-			pos.x  = 0;
-			pos.y += tran.get_size().y;
-		}
-
+		bc_color rand_color(rand() % 255, rand() % 255, rand() % 255, rand() % 255);
+		bc_color white_color(255, 255, 255, 255);
+		// size need to be fixed so we can draw big letters
+		render.draw_text("Hello From\nBattle\n\tCity ^_^", 8, &tran, &nes_font, clut_brick, white_color, &brick_texture, bc_uv(0.f, 0.f, 8.f, 8.f));
 
 		clut.bind(&shader);
 		render.submit();

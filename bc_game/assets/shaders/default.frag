@@ -18,15 +18,15 @@ void main()
     float color_id = texture(textures[ int(Texture_idx) ], UV).r;	
 	int   idx      = 0;
 
-    if(B_use_sample > 0.1f)
+    if(B_use_sample > 0.0f)
 	{
-	    color_id = texture(textures[int(Text_sample_idx)], Sample_uv).r;
-		idx      = int(color_id * 4);
+	    float pixel = texture(textures[int(Text_sample_idx)], Sample_uv).r;
+		idx         = int(pixel * 4);
 
-		if(color_id > 0.0f)
+		if(color_id > 0.1f)
 		{
 		    FragColor = clut[ int(Palatte_idx) ][ idx ] * Color;
-		}
+		}	
 	}
 	else
 	{

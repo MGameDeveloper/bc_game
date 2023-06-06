@@ -90,8 +90,9 @@ public:
 		u32 clut_id,
 		const bc_color& color = bc_color(255, 255, 255, 255));
 	
-	void draw_text(bc_transform* trans, 
-		const bc_uv& uv,
+	void draw_text(const char* text, 
+		u32 font_size,
+		bc_transform* trans, 
 		bc_texture* font,
 		u32 clut_id, 
 		const bc_color& color = bc_color(255, 255, 255, 255),
