@@ -21,12 +21,45 @@ namespace pool
 	};
 
 	static bc_texture_data textures[32];
-	static i32             idx           = 0;
-	static i32             count         = 32;
-	static bool            should_rebind = false;
+	static i32             idx              = 0;
+	static i32             count            = 32;
+	static bool            should_rebind    = false;
+	static bool            has_dumb_texture = false;
+
+	static void setup_dumb_texture()
+	{
+		bc_texture_data* texture = &textures[idx++];
+
+		glGenTextures(1, &texture->id);
+		glBindTexture(GL_TEXTURE_2D, texture->id);
+
+		u8 data[]{ 255, 255, 255, 255 };
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+		texture->use_count  += 1;
+		texture->path        = "bc_dumb_texture";
+		texture->width       = 1;
+		texture->height      = 1;
+		texture->width_norm  = 1.f / float(1);
+		texture->height_norm = 1.f / float(1);
+		should_rebind        = true;
+
+		has_dumb_texture = true;
+	}
 
 	static i32 load(const char* path)
 	{
+		if (!has_dumb_texture)
+		{
+			bc_log::error("[ bc_texture ]: you must call bc_texture::init to initialize it");
+			return -1;
+		}
+
 		bc_texture_data* texture = NULL;
 
 		for (i32 i = 0; i < idx; ++i)
@@ -216,4 +249,9 @@ void bc_texture::bind(bc_shader* shader)
 
 		pool::should_rebind = false;
 	}
+}
+
+void bc_texture::init()
+{
+	pool::setup_dumb_texture();
 }

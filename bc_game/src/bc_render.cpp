@@ -122,8 +122,7 @@ void bc_render::set_camera(bc_camera* camera)
 }
 
 void bc_render::draw_sprite(bc_transform* trans,
-	const glm::vec2& uv_pos,
-	const glm::vec2& uv_size,
+	const bc_uv& uv,
 	bc_texture* texture,
 	u32 clut_id,
 	const bc_color& color)
@@ -186,8 +185,8 @@ void bc_render::draw_sprite(bc_transform* trans,
 
 		if (texture)
 		{
-			glm::vec2 local_uv_pos = { uv_pos.x * texture->size_norm().x, uv_pos.y * texture->size_norm().y };
-			glm::vec2 local_uv_size = { uv_size.x * texture->size_norm().x, uv_size.y * texture->size_norm().y };
+			glm::vec2 local_uv_pos  = { uv.pos.x  * texture->size_norm().x, uv.pos.y  * texture->size_norm().y };
+			glm::vec2 local_uv_size = { uv.size.x * texture->size_norm().x, uv.size.y * texture->size_norm().y };
 
 			s->v[0].uv = local_uv_pos;
 			s->v[1].uv = glm::vec2(local_uv_pos.x + local_uv_size.x, local_uv_pos.y);
@@ -198,6 +197,13 @@ void bc_render::draw_sprite(bc_transform* trans,
 			s->v[1].texture_id = texture->idx();
 			s->v[2].texture_id = texture->idx();
 			s->v[3].texture_id = texture->idx();
+		}
+		else
+		{
+			s->v[0].texture_id = 0;
+			s->v[1].texture_id = 0;
+			s->v[2].texture_id = 0;
+			s->v[3].texture_id = 0;
 		}
 
 		glm::vec2 local_size = trans->get_size() * trans->get_scale();
@@ -215,21 +221,20 @@ void bc_render::draw_sprite(bc_transform* trans,
 }
 
 void bc_render::draw_text(bc_transform* trans,
-	const glm::vec2& uv_pos,
-	const glm::vec2& uv_size,
+	const bc_uv& uv,
 	bc_texture* font,
 	u32 clut_id,
 	const bc_color& color,
 	bc_texture* texture,
-	const glm::vec2& texture_uv)
+	const bc_uv& texture_uv)
 {
 
 }
 
 void bc_render::clear(u8 r, u8 g, u8 b, u8 a)
 {
-	static float f = 1.f / 255.f;
-	glClearColor(r * f, g * f, b * f, a * f);
+	bc_color c(r, g, b, a);
+	glClearColor(c.r, c.g, c.b, c.a);
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
@@ -240,9 +245,8 @@ void bc_render::submit()
 		bc_log::warning("[ bc_render::submit() ]: m_shader is NULL");
 		return;
 	}
-	else
-		m_shader->bind();
 
+	m_shader->bind();
 	bc_texture::bind(m_shader);
 
 	glBindVertexArray(m_vao);
@@ -261,13 +265,31 @@ void bc_render::submit()
 	m_canvas->idx = 0;
 }
 
-void bc_render::init()
+void bc_render::enable_blend(bool should_blend)
 {
-	glEnable(GL_DEBUG_OUTPUT);
-	glDebugMessageCallback(local_error_callback, 0);
+	if (should_blend)
+	{
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+	}
+	else
+	{
+		glDisable(GL_BLEND);
+	}
+	
+}
 
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND);
+void bc_render::enable_debug_output(bool should_output)
+{
+	if (should_output)
+	{
+		glEnable(GL_DEBUG_OUTPUT);
+		glDebugMessageCallback(local_error_callback, 0);
+	}
+	else
+	{
+		glDisable(GL_DEBUG_OUTPUT);
+	}
 }
 
 void bc_render::show_memory_consumtion()

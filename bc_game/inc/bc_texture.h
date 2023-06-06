@@ -28,4 +28,5 @@ public:
 	i32         idx_into_pool();
 
 	static void bind(bc_shader* shader);
+	static void init();
 };

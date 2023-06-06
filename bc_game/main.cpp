@@ -33,6 +33,10 @@ int main(int argc, const char** argv)
 	bc_render render(100000);
 	bc_clut   clut(8, 4);
 	
+	bc_render::enable_blend(true);
+	bc_render::enable_debug_output(true);
+	bc_texture::init(); // create a dumb texture 
+
 	render.set_shader(&shader);
 	render.set_camera(&camera);
 	
@@ -80,7 +84,7 @@ int main(int argc, const char** argv)
 	bc_texture   brick_texture("assets/textures/bc_brick_tile.png");
 	bc_time      time;
 
-	tran.set_size(glm::vec3(2.f));
+	tran.set_size(glm::vec3(1.f));
 
 	while (!window.is_closing())
 	{
@@ -88,7 +92,7 @@ int main(int argc, const char** argv)
 
 		bc_window::poll_events();
 		
-		render.clear(50, 50, 50, 255);
+		render.clear(0, 0, 0, 255);
 
 		glm::vec3 pos(0.f);
 		glm::vec2 view_size(camera.get_view_size().x / tran.get_size().x, camera.get_view_size().y / tran.get_size().y);
@@ -98,7 +102,9 @@ int main(int argc, const char** argv)
 			for (i32 x = 0; x < view_size.x; ++x)
 			{
 				tran.translate(pos);
-				render.draw_sprite(&tran, { 0, 0 }, { 8, 8 }, NULL, clut_brick, bc_color(rand() % 255, rand() % 255, rand() % 255, 255));
+
+				bc_color rand_color(rand() % 255, rand() % 255, rand() % 255, 255);
+				render.draw_sprite(&tran, bc_uv(0.f, 0.f, 8.f, 8.f), NULL, 0, rand_color);
 				
 				pos.x += tran.get_size().x;
 			}

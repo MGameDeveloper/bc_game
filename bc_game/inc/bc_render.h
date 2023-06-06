@@ -10,12 +10,31 @@ struct bc_texture;
 
 struct bc_color
 {
-	glm::vec4 color;
+	union
+	{
+		glm::vec4 color;
+		struct
+		{
+			float r, g, b, a;
+		};
+	};
 	
 	bc_color(u8 r, u8 g, u8 b, u8 a)
 	{
 		static float f = 1.f / 255.f;
 		color = glm::vec4(r * f, g * f, b * f, a * f);
+	}
+};
+
+struct bc_uv
+{
+	glm::vec2 pos  = glm::vec2(0.f);
+	glm::vec2 size = glm::vec2(8.f);
+
+	bc_uv(float x, float y, float w, float h)
+	{
+		pos = glm::vec2(x, y);
+		size = glm::vec2(w, h);
 	}
 };
 
@@ -66,24 +85,23 @@ public:
 	void set_camera(bc_camera* camera);
 
 	void draw_sprite(bc_transform* trans, 
-		const glm::vec2& uv_pos, 
-		const glm::vec2& uv_size,
+		const bc_uv& uv,
 		bc_texture* texture,
 		u32 clut_id,
 		const bc_color& color = bc_color(255, 255, 255, 255));
 	
 	void draw_text(bc_transform* trans, 
-		const glm::vec2& uv_pos, 
-		const glm::vec2& uv_size,
+		const bc_uv& uv,
 		bc_texture* font,
 		u32 clut_id, 
 		const bc_color& color = bc_color(255, 255, 255, 255),
 		bc_texture* texture = NULL,
-		const glm::vec2& texture_uv = glm::vec2(0.f));
+		const bc_uv& texture_uv = bc_uv(0.f, 0.f, 0.f, 0.f));
 
 	void clear(u8 r, u8 g, u8 b, u8 a);
 	void submit();
 
-	static void init();
+	static void enable_blend(bool should_blend);
+	static void enable_debug_output(bool should_output);
 	static void show_memory_consumtion();
 };
