@@ -254,6 +254,7 @@ void bc_render::draw_text(const char* text,
 	glm::vec2    offset;
 	glm::vec3    original_pos = trans->get_position();
 	glm::vec2    size         = trans->get_size();
+	glm::vec2    uv_size      = glm::vec2(trans->get_scale().x, trans->get_scale().y);
 	i32          letter       = 0;
 	i32          txt_len      = strlen(text);
 	u32          font_width   = font->size().x / font_size;
@@ -310,8 +311,8 @@ void bc_render::draw_text(const char* text,
 				s->v[2].text_texture_id = texture->idx();
 				s->v[3].text_texture_id = texture->idx();
 
-				glm::vec2 local_uv_pos  = { texture_uv.pos.x  * texture->size_norm().x, texture_uv.pos.y  * texture->size_norm().y };
-				glm::vec2 local_uv_size = { texture_uv.size.x * texture->size_norm().x, texture_uv.size.y * texture->size_norm().y };
+				glm::vec2 local_uv_pos  = { texture_uv.pos.x  * texture->size_norm().x * uv_size.x, texture_uv.pos.y  * texture->size_norm().y * uv_size.y };
+				glm::vec2 local_uv_size = { texture_uv.size.x * texture->size_norm().x * uv_size.x, texture_uv.size.y * texture->size_norm().y * uv_size.y };
 
 				s->v[0].text_texture_uv = local_uv_pos;
 				s->v[1].text_texture_uv = glm::vec2(local_uv_pos.x + local_uv_size.x, local_uv_pos.y);

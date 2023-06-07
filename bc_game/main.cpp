@@ -80,6 +80,7 @@ int main(int argc, const char** argv)
 	clut.set_color(clut_red_tank, 2, glm::vec4(219.f, 40.f, 0.f, 255.f));
 	clut.set_color(clut_red_tank, 3, glm::vec4(255., 255.f, 255.f, 255.f));
 
+	bc_transform tile_tran;
 	bc_transform tran;
 	bc_texture   brick_texture("assets/textures/bc_brick_tile.png");
 	bc_texture   nes_font("assets/fonts/nes.png");
@@ -88,6 +89,7 @@ int main(int argc, const char** argv)
 	bc_input     input(&cmds);
 
 	
+	tran.translate(glm::vec3(32, 32, 0));
 	tran.set_size(glm::vec3(8.f));
 	tran.scale(glm::vec3(4.f));
 
@@ -121,8 +123,15 @@ int main(int argc, const char** argv)
 
 		bc_color rand_color(rand() % 255, rand() % 255, rand() % 255, rand() % 255);
 		bc_color white_color(255, 255, 255, 255);
+
+		double r_sn = (sin(time.elapsed_time) * 0.5f + 0.5f) * 255;
+		double g_cn = (cos(time.elapsed_time) * 0.5f + 0.5f) * 255;
+		double b_tn = (tan(time.elapsed_time) * 5.0f + 2.5f) * 255;
+		bc_color interpolate_color(r_sn, g_cn, b_tn, 255);
+
 		// size need to be fixed so we can draw big letters
-		render.draw_text("Hello From\nBattle\n\tCity ^_^", 8, &tran, &nes_font, clut_brick, white_color, &brick_texture, bc_uv(0.f, 0.f, 8.f, 8.f));
+		render.draw_sprite(&tile_tran, bc_uv(0.f, 0.f, 8.f, 8.f), &brick_texture, clut_brick);
+		render.draw_text("BATTLE\n CITY", 8, &tran, &nes_font, clut_brick, interpolate_color, &brick_texture, bc_uv(0.f, 0.f, 8.f, 8.f));
 
 		clut.bind(&shader);
 		render.submit();
