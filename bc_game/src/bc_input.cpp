@@ -199,6 +199,17 @@ void bc_input::on_key(ekey key, ekeystate state, ekeymod mods)
 		{
 			key_detail->key.state = state;
 			key_detail->key.mods  = mods;
+
+			if (event_queue.idx < event_queue.count)
+			{
+				bc_key* key_event = &event_queue.key[event_queue.idx++];
+				key_event->code   = key;
+				key_event->state  = state;
+				key_event->mods   = mods;
+			}
+			else
+				bc_log::warning("[ bc_input::on_key ]: event_queue out of range");
+
 			return;
 		}
 	}
