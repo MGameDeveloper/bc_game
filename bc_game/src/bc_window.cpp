@@ -1,10 +1,25 @@
 #include <glad/glad.h>
 #include "../inc/bc_window.h"
 #include "../inc/bc_log.h"
+#include "../inc/bc_key.h"
+#include "../inc/bc_input.h"
 
 static void local_window_error_callback(int error, const char* desc)
 {
 	bc_log::error("[ GLFW ]: %s", desc);
+}
+
+void local_on_key_callback(GLFWwindow* window, int key, int scancode, int action, int mod)
+{
+	bc_input* input = (bc_input*)glfwGetWindowUserPointer(window);
+	if (!input)
+		return;
+
+	ekey      local_key       = bc_key::get_key(key);
+	ekeymod   local_mod_key   = bc_key::get_keymod(mod);
+	ekeystate local_key_state = bc_key::get_state(action);
+
+	input->on_key(local_key, local_key_state, local_mod_key);
 }
 
 bc_window::bc_window(const char* title, const glm::vec2& size, u32 gl_major_version, u32 gl_minor_version)
@@ -37,6 +52,7 @@ bc_window::bc_window(const char* title, const glm::vec2& size, u32 gl_major_vers
 
 	glfwMakeContextCurrent(window);
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+	glfwSetKeyCallback(window, local_on_key_callback);
 }
 
 bc_window::~bc_window()
@@ -88,7 +104,7 @@ void bc_window::activate_as_current_context()
 	glfwMakeContextCurrent(window);
 }
 
-void bc_window::onkey_callback(GLFWkeyfun key_callback)
+void bc_window::register_input(class bc_input* input)
 {
-	glfwSetKeyCallback(window, key_callback);
+	glfwSetWindowUserPointer(window, input);
 }

@@ -44,7 +44,7 @@ private:
 	{
 		bc_key key[64];
 		i32    idx   = 0;
-		i32    count = 0;
+		i32    count = 64;
 	};
 
 	bc_key_event_queue event_queue;
@@ -52,6 +52,7 @@ private:
 	bc_action_key      *action_list     = NULL;
 	bc_axis_key        *axis_list       = NULL;
 	bc_cmd             *cmds            = NULL;
+
 
 public:
 	bc_input(bc_cmd* input_cmds);
@@ -70,6 +71,6 @@ public:
 
 	void set_cmds(bc_cmd* input_cmds);
 	void process();
-
+	
 	void on_key(ekey key, ekeystate state, ekeymod mods);
 };

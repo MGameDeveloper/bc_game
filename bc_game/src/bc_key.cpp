@@ -131,3 +131,15 @@ ekeymod bc_key::get_keymod(i32 mod)
 
 	return ekeymod(m);
 }
+
+ekeystate bc_key::get_state(i32 state)
+{
+	switch (state)
+	{
+	case GLFW_PRESS:   return ekeystate_Press;
+	case GLFW_RELEASE: return ekeystate_Release;
+	case GLFW_REPEAT:  return ekeystate_Repeat;
+	}
+
+	return ekeystate_Unknown;
+}

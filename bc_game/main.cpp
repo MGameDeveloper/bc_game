@@ -25,6 +25,7 @@ enum bc_clut_e
 	clut_count,
 };
 
+
 int main(int argc, const char** argv)
 {
 	bc_window window("BattleCity", { 1200, 800 });
@@ -34,8 +35,9 @@ int main(int argc, const char** argv)
 	bc_clut   clut(8, 4);
 
 	bc_render::enable_blend(true);
-	bc_render::enable_debug_output(true);
+	bc_render::enable_debug_output(false);
 	bc_texture::init();
+	bc_key::init();
 
 	render.set_shader(&shader);
 	render.set_camera(&camera);
@@ -88,7 +90,13 @@ int main(int argc, const char** argv)
 	bc_cmd       cmds;
 	bc_input     input(&cmds);
 
-	
+	window.register_input(&input);
+
+	cmds.add_action("print", []() {bc_log::info("from input callback"); });
+	input.bind_action(ekey_P, ekeystate_Press, ekeymod_Unknown, "print");
+
+	tile_tran.set_size(glm::vec3(3.f));
+
 	tran.translate(glm::vec3(32, 32, 0));
 	tran.set_size(glm::vec3(8.f));
 	tran.scale(glm::vec3(4.f));
@@ -98,39 +106,37 @@ int main(int argc, const char** argv)
 		time.update();
 
 		bc_window::poll_events();
-		
+		input.process();
+
 		render.clear(0, 0, 0, 255);
 
-		//glm::vec3 pos(0.f);
-		//glm::vec2 view_size(camera.get_view_size().x / tran.get_size().x, camera.get_view_size().y / tran.get_size().y);
-		//
-		//for (i32 y = 0; y < view_size.y; ++y)
-		//{
-		//	for (i32 x = 0; x < view_size.x; ++x)
-		//	{
-		//		tran.translate(pos);
-		//
-		//		bc_color rand_color(rand() % 255, rand() % 255, rand() % 255, 255);
-		//		//render.draw_sprite(&tran, bc_uv(0.f, 0.f, 8.f, 8.f), NULL, 0, rand_color);
-		//		render.draw_sprite(&tran, bc_uv(0.f, 0.f, 8.f, 8.f), &brick_texture, 0, rand_color);
-		//		
-		//		pos.x += tran.get_size().x;
-		//	}
-		//
-		//	pos.x  = 0;
-		//	pos.y += tran.get_size().y;
-		//}
-
-		bc_color rand_color(rand() % 255, rand() % 255, rand() % 255, rand() % 255);
-		bc_color white_color(255, 255, 255, 255);
+		glm::vec3 pos(0.f);
+		glm::vec2 view_size(camera.get_view_size().x / tile_tran.get_size().x, camera.get_view_size().y / tile_tran.get_size().y);
+		
+		for (i32 y = 0; y < view_size.y; ++y)
+		{
+			for (i32 x = 0; x < view_size.x; ++x)
+			{
+				tile_tran.translate(pos);
+		
+				bc_color rand_color(rand() % 10, rand() % 10, rand() % 10, 255);
+				render.draw_sprite(&tile_tran, bc_uv(0.f, 0.f, 8.f, 8.f), NULL, 0, rand_color);
+				
+				pos.x += tile_tran.get_size().x;
+			}
+		
+			pos.x  = 0;
+			pos.y += tile_tran.get_size().y;
+		}
 
 		double r_sn = (sin(time.elapsed_time) * 0.5f + 0.5f) * 255;
 		double g_cn = (cos(time.elapsed_time) * 0.5f + 0.5f) * 255;
 		double b_tn = (tan(time.elapsed_time) * 5.0f + 2.5f) * 255;
 		bc_color interpolate_color(r_sn, g_cn, b_tn, 255);
+		bc_color white_color(255, 255, 255, 255);
+		bc_color rand_color(rand() % 255, rand() % 255, rand() % 255, rand() % 255);
 
 		// size need to be fixed so we can draw big letters
-		render.draw_sprite(&tile_tran, bc_uv(0.f, 0.f, 8.f, 8.f), &brick_texture, clut_brick);
 		render.draw_text("BATTLE\n CITY", 8, &tran, &nes_font, clut_brick, interpolate_color, &brick_texture, bc_uv(0.f, 0.f, 8.f, 8.f));
 
 		clut.bind(&shader);

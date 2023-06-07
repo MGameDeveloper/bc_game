@@ -195,7 +195,7 @@ void bc_input::on_key(ekey key, ekeystate state, ekeymod mods)
 	bc_key_detail *key_detail = key_detail_list;
 	for (; key_detail; key_detail = key_detail->next)
 	{
-		if (key_detail->key.code = key)
+		if (key_detail->key.code == key)
 		{
 			key_detail->key.state = state;
 			key_detail->key.mods  = mods;

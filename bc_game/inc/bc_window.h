@@ -30,5 +30,5 @@ public:
 	void swap_buffers();
 	void activate_as_current_context();
 
-	void onkey_callback(GLFWkeyfun key_callback);
+	void register_input(class bc_input* input);
 };
