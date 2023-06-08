@@ -6,8 +6,11 @@ static bc_memory_tracker_s bc_mem("[ BC_CMDS ]");
 bc_cmd::~bc_cmd()
 {
 	cmd* c = list;
-	for (; c; c = c->next)
+	for (; c; c = list)
+	{
+		list = c->next;
 		bc_mem.dealloc(c);
+	}
 }
 
 void bc_cmd::add_action(const char* msg, action_callback_t action)

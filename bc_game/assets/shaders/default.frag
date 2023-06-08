@@ -27,17 +27,22 @@ void main()
 		{
 		    FragColor = clut[ int(Palatte_idx) ][ idx ] * Color;
 		}	
+		else
+		{
+		    //FragColor = Color;
+		    FragColor = vec4(0.f);
+		}
 	}
 	else
 	{
 	    idx = int(color_id * 4);
-		if(idx > 3)
+		if(idx < 4)
 		{
-		    FragColor = Color;
+		    FragColor = clut[ int(Palatte_idx) ][ idx ] * Color;
 		}
 		else
 		{
-		    FragColor = clut[ int(Palatte_idx) ][ idx ] * Color;
+		    FragColor = Color;
 		}
 	}	
 }

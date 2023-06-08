@@ -119,7 +119,7 @@ int main(int argc, const char** argv)
 			{
 				tile_tran.translate(pos);
 		
-				bc_color rand_color(rand() % 10, rand() % 10, rand() % 10, 255);
+				bc_color rand_color(rand() % 20, rand() % 20, rand() % 20, 255);
 				render.draw_sprite(&tile_tran, bc_uv(0.f, 0.f, 8.f, 8.f), NULL, 0, rand_color);
 				
 				pos.x += tile_tran.get_size().x;

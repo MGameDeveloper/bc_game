@@ -20,14 +20,23 @@ bc_input::~bc_input()
 	bc_action_key *action     = action_list;
 	bc_axis_key   *axis       = axis_list;
 
-	for (; key_detail; key_detail = key_detail->next)
+	for (; key_detail; key_detail = key_detail_list)
+	{
+		key_detail_list = key_detail->next;
 		bc_mem.dealloc(key_detail);
+	}
 
-	for (; action; action = action->next)
+	for (; action; action = action_list)
+	{
+		action_list = action->next;
 		bc_mem.dealloc(action);
+	}
 
-	for (; axis; axis = axis->next)
+	for (; axis; axis = axis_list)
+	{
+		axis_list = axis->next;
 		bc_mem.dealloc(axis);
+	}
 }
 
 void bc_input::bind_action(ekey key, ekeystate state, ekeymod mods, const char* msg)
@@ -53,7 +62,7 @@ void bc_input::bind_action(ekey key, ekeystate state, ekeymod mods, const char* 
 	action->next      = action_list;
 	action_list       = action;
 
-	bc_log::trace("Action added (%d, %d, %d, %s)", key, mods, msg, msg);
+	bc_log::trace("Action added (%d, %d, %d, %s)", key, state, mods, msg);
 }
 
 void bc_input::bind_axis(ekey key, ekeymod mods, const char* msg, float scale)
