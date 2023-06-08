@@ -92,9 +92,16 @@ int main(int argc, const char** argv)
 
 	window.register_input(&input);
 
-	cmds.add_action("press",   []() {bc_log::info("press"); });
+	cmds.add_axis("forward",  [](float v) { bc_log::trace("foraward: %.2f", v); });
+	cmds.add_axis("sideward", [](float v) { bc_log::trace("sidward: %.2f", v);  });
+	cmds.add_action("press",   []() {bc_log::info("press");   });
 	cmds.add_action("release", []() {bc_log::info("release"); });
-	cmds.add_action("repeat",  []() {bc_log::info("repeat"); });
+	cmds.add_action("repeat",  []() {bc_log::info("repeat");  });
+
+	input.bind_axis(ekey_Up,    ekeymod_Unknown, "forward",   1.f);
+	input.bind_axis(ekey_Down,  ekeymod_Unknown, "forward",  -1.f);
+	input.bind_axis(ekey_Right, ekeymod_Unknown, "sideward",  1.f);
+	input.bind_axis(ekey_Left,  ekeymod_Unknown, "sideward", -1.f);
 	input.bind_action(ekey_A, ekeystate_Press,   ekeymod_Unknown, "press");
 	input.bind_action(ekey_B, ekeystate_Release, ekeymod_Unknown, "release");
 	input.bind_action(ekey_C, ekeystate_Repeat,  ekeymod_Unknown, "repeat");
@@ -102,8 +109,8 @@ int main(int argc, const char** argv)
 	tile_tran.set_size(glm::vec3(3.f));
 
 	tran.translate(glm::vec3(32, 32, 0));
-	tran.set_size(glm::vec3(8.f));
-	tran.scale(glm::vec3(4.f));
+	tran.set_size (glm::vec3(8.f));
+	tran.scale    (glm::vec3(4.f));
 
 	while (!window.is_closing())
 	{
