@@ -134,16 +134,24 @@ void bc_input::process()
 		for (; action; action = action->next)
 		{
 			if (key->code == action->key.code &&
-				key->mods == action->key.mods &&
-				key->state == action->key.state)
+				key->mods == action->key.mods)
 			{
-				actions[action_idx].msg = action->msg;
-				action_idx++;
+				if (key->state == ekeystate_Press && action->key.state == ekeystate_Repeat)
+				{
+					actions[action_idx].msg = action->msg;
+					action_idx++;
+				}
+				else if (key->state == action->key.state)
+				{
+					actions[action_idx].msg = action->msg;
+					action_idx++;
+				}	
 			}
 		}
 	}
 
 	// Collect Axes
+	// Revers the loops to minimize the iteration
 	for (; key_detail; key_detail = key_detail->next)
 	{
 		if (key_detail->key.state == ekeystate_Unknown)
@@ -181,7 +189,8 @@ void bc_input::process()
 			}
 		}
 
-		key_detail->key.state = ekeystate_Unknown;
+		//if(key_detail->key.state == ekeystate_Release)
+		//key_detail->key.state = ekeystate_Unknown;
 	}
 
 

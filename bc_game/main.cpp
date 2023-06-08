@@ -92,8 +92,12 @@ int main(int argc, const char** argv)
 
 	window.register_input(&input);
 
-	cmds.add_action("print", []() {bc_log::info("from input callback"); });
-	input.bind_action(ekey_P, ekeystate_Press, ekeymod_Unknown, "print");
+	cmds.add_action("press",   []() {bc_log::info("press"); });
+	cmds.add_action("release", []() {bc_log::info("release"); });
+	cmds.add_action("repeat",  []() {bc_log::info("repeat"); });
+	input.bind_action(ekey_A, ekeystate_Press,   ekeymod_Unknown, "press");
+	input.bind_action(ekey_B, ekeystate_Release, ekeymod_Unknown, "release");
+	input.bind_action(ekey_C, ekeystate_Repeat,  ekeymod_Unknown, "repeat");
 
 	tile_tran.set_size(glm::vec3(3.f));
 
