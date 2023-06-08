@@ -167,6 +167,7 @@ void bc_input::process()
 				bool axis_found = false;
 				for (i32 idx = 0; idx < axis_idx; ++idx)
 				{
+					bc_log::warning("looking for same axis");
 					if (strcmp(axis->msg, axes[idx].msg) == 0)
 					{
 						axis_found = true;
