@@ -86,7 +86,7 @@ void bc_input::bind_axis(ekey key, ekeymod mods, const char* msg, float scale)
 	axis->scale    = scale;
 	axis->msg      = msg;
 	axis->next     = axis_list;
-	axis_list      = axis->next;
+	axis_list      = axis;
 
 	bc_log::trace("Axis added (%d, %d, %s, %.2f)", key, mods, msg, scale);
 }
@@ -189,8 +189,10 @@ void bc_input::process()
 			}
 		}
 
-		//if(key_detail->key.state == ekeystate_Release)
-		//key_detail->key.state = ekeystate_Unknown;
+		if (key_detail->key.state == ekeystate_Release)
+		{
+			key_detail->key.state = ekeystate_Unknown;
+		}
 	}
 
 
