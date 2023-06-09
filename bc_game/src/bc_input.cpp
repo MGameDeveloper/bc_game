@@ -152,22 +152,70 @@ void bc_input::process()
 
 	// Collect Axes
 	// Revers the loops to minimize the iteration
-	for (; key_detail; key_detail = key_detail->next)
+	for (; axis; axis = axis->next)
 	{
-		if (key_detail->key.state == ekeystate_Unknown)
-			continue;
-
-		for (; axis; axis = axis->next)
+		for (; key_detail; key_detail = key_detail->next)
 		{
-			if (key_detail->key.code == axis->key.code &&
-				key_detail->key.mods == axis->key.mods &&
-				key_detail->key.state > ekeystate_Unknown)
+			if (key_detail->key == axis->key.code &&
+				(key_detail->event[ekeystate_Press] || key_detail->event[ekeystate_Repeat]))
 			{
 				// Accumulate axis scale value
 				bool axis_found = false;
 				for (i32 idx = 0; idx < axis_idx; ++idx)
 				{
-					bc_log::warning("looking for same axis");
+					//bc_log::warning("looking for same axis");
+					if (strcmp(axis->msg, axes[idx].msg) == 0)
+					{
+						axis_found = true;
+						axes[idx].scale += axis->scale;
+						break;
+					}
+				}
+
+				if (!axis_found)
+				{
+					if (axis_idx + 1 < 256)
+					{
+						axes[axis_idx].msg = axis->msg;
+						axes[axis_idx].scale = axis->scale;
+						axis_idx++;
+					}
+					else
+						bc_log::error("[ bc_input::process() ]: axis pool out of range [ %s ]", axis->msg);
+				}
+
+
+				if (key_detail->event[ekeystate_Release] > 0)
+				{
+					key_detail->event[ekeystate_Release]--;
+					key_detail->event[ekeystate_Repeat] = 0;
+					key_detail->event[ekeystate_Press]  = 0;
+				}
+
+				break;
+			}
+		}
+		key_detail = key_detail_list;
+	}
+
+#if 0
+	for (; key_detail; key_detail = key_detail->next)
+	{
+		//if (key_detail->key.state == ekeystate_Unknown)
+			//continue;
+
+		for (; axis; axis = axis->next)
+		{
+			if (key_detail->key == axis->key.code &&
+				key_detail->mods == axis->key.mods &&
+				(key_detail->event[ekeystate_Press] > 0 || 
+				key_detail->event[ekeystate_Repeat] > 0))
+			{
+				// Accumulate axis scale value
+				bool axis_found = false;
+				for (i32 idx = 0; idx < axis_idx; ++idx)
+				{
+					//bc_log::warning("looking for same axis");
 					if (strcmp(axis->msg, axes[idx].msg) == 0)
 					{
 						axis_found = true;
@@ -190,12 +238,22 @@ void bc_input::process()
 			}
 		}
 
-		if (key_detail->key.state == ekeystate_Release)
+		if (key_detail->event[ekeystate_Press] > 0)
 		{
-			key_detail->key.state = ekeystate_Unknown;
+			key_detail->event[ekeystate_Press]--;
+		}
+
+		if (key_detail->event[ekeystate_Repeat])
+		{
+			key_detail->event[ekeystate_Repeat]--;
+		}
+
+		if (key_detail->event[ekeystate_Release])
+		{
+			key_detail->event[ekeystate_Release]--;
 		}
 	}
-
+#endif
 
 	for (i32 idx = 0; idx < action_idx; ++idx)
 	{
@@ -209,6 +267,7 @@ void bc_input::process()
 
 	bc_mem.zero(event_queue.key, sizeof(bc_key)* event_queue.count);
 	event_queue.idx = 0;
+
 }
 
 void bc_input::on_key(ekey key, ekeystate state, ekeymod mods)
@@ -216,10 +275,10 @@ void bc_input::on_key(ekey key, ekeystate state, ekeymod mods)
 	bc_key_detail *key_detail = key_detail_list;
 	for (; key_detail; key_detail = key_detail->next)
 	{
-		if (key_detail->key.code == key)
+		if (key_detail->key == key)
 		{
-			key_detail->key.state = state;
-			key_detail->key.mods  = mods;
+			key_detail->event[state]++;
+			key_detail->mods = mods;
 
 			if (event_queue.idx < event_queue.count)
 			{
@@ -235,12 +294,12 @@ void bc_input::on_key(ekey key, ekeystate state, ekeymod mods)
 		}
 	}
 
-	key_detail            = (bc_key_detail*)bc_mem.alloc(sizeof(bc_key_detail));
-	key_detail->key.code  = key;
-	key_detail->key.state = state;
-	key_detail->key.mods  = mods;
-	key_detail->next      = key_detail_list;
-	key_detail_list       = key_detail;
+	key_detail       = (bc_key_detail*)bc_mem.alloc(sizeof(bc_key_detail));
+	key_detail->key  = key;
+	key_detail->event[state]++;
+	key_detail->mods  = mods;
+	key_detail->next  = key_detail_list;
+	key_detail_list   = key_detail;
 
 	if (event_queue.idx < event_queue.count)
 	{

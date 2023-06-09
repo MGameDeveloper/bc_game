@@ -25,6 +25,32 @@ enum bc_clut_e
 	clut_count,
 };
 
+bc_time      time;
+float speed = 50.f;
+glm::vec3 ctrl_pos(32.f, 32.f, 0.f);
+void move_forward(float v)
+{
+	if (v > 0.f)
+	{
+		ctrl_pos.y -= speed * time.dt;
+	}
+	else if (v < 0.f)
+	{
+		ctrl_pos.y += speed * time.dt;
+	}
+}
+
+void move_sideward(float v)
+{
+	if (v > 0.f)
+	{
+		ctrl_pos.x += speed * time.dt;
+	}
+	else if (v < 0.f)
+	{
+		ctrl_pos.x -= speed * time.dt;
+	}
+}
 
 int main(int argc, const char** argv)
 {
@@ -86,14 +112,15 @@ int main(int argc, const char** argv)
 	bc_transform tran;
 	bc_texture   brick_texture("assets/textures/bc_brick_tile.png");
 	bc_texture   nes_font("assets/fonts/nes.png");
-	bc_time      time;
 	bc_cmd       cmds;
 	bc_input     input(&cmds);
 
 	window.register_input(&input);
 
-	cmds.add_axis("forward",  [](float v) { bc_log::trace("foraward: %.2f", v); });
-	cmds.add_axis("sideward", [](float v) { bc_log::trace("sidward: %.2f", v);  });
+	//cmds.add_axis("forward", [](float v) { bc_log::trace("foraward: %.2f", v); });
+	//cmds.add_axis("sideward", [](float v) { bc_log::trace("sidward: %.2f", v);  });
+	cmds.add_axis("forward",  move_forward);
+	cmds.add_axis("sideward", move_sideward);
 	cmds.add_action("press",   []() {bc_log::info("press");   });
 	cmds.add_action("release", []() {bc_log::info("release"); });
 	cmds.add_action("repeat",  []() {bc_log::info("repeat");  });
@@ -106,7 +133,7 @@ int main(int argc, const char** argv)
 	input.bind_action(ekey_B, ekeystate_Release, ekeymod_Unknown, "release");
 	input.bind_action(ekey_C, ekeystate_Repeat,  ekeymod_Unknown, "repeat");
 
-	tile_tran.set_size(glm::vec3(3.f));
+	tile_tran.set_size(glm::vec3(8.f));
 
 	tran.translate(glm::vec3(32, 32, 0));
 	tran.set_size (glm::vec3(8.f));
@@ -121,7 +148,7 @@ int main(int argc, const char** argv)
 
 		render.clear(0, 0, 0, 255);
 
-		glm::vec3 pos(0.f);
+		glm::vec3 pos(0.0f);
 		glm::vec2 view_size(camera.get_view_size().x / tile_tran.get_size().x, camera.get_view_size().y / tile_tran.get_size().y);
 		
 		for (i32 y = 0; y < view_size.y; ++y)
@@ -130,7 +157,7 @@ int main(int argc, const char** argv)
 			{
 				tile_tran.translate(pos);
 		
-				bc_color rand_color(rand() % 20, rand() % 20, rand() % 20, 255);
+			    bc_color rand_color(rand() % 20, rand() % 20, rand() % 20, 255);
 				render.draw_sprite(&tile_tran, bc_uv(0.f, 0.f, 8.f, 8.f), NULL, 0, rand_color);
 				
 				pos.x += tile_tran.get_size().x;
@@ -148,6 +175,7 @@ int main(int argc, const char** argv)
 		bc_color rand_color(rand() % 255, rand() % 255, rand() % 255, rand() % 255);
 
 		// size need to be fixed so we can draw big letters
+		tran.translate(ctrl_pos);
 		render.draw_text("BATTLE\n CITY", 8, &tran, &nes_font, clut_brick, interpolate_color, &brick_texture, bc_uv(0.f, 0.f, 8.f, 8.f));
 
 		clut.bind(&shader);

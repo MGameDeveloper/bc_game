@@ -18,7 +18,9 @@ private:
 	struct bc_key_detail
 	{
 		bc_key_detail *next;
-		bc_key         key;
+		ekey           key;
+		ekeymod        mods;
+		u32            event[3]; // 0 press, 1 release, 2 repeat
 	};
 
 	struct bc_action_key
@@ -73,4 +75,10 @@ public:
 	void process();
 	
 	void on_key(ekey key, ekeystate state, ekeymod mods);
+
+	// to make all data structures contigous instead of link list
+	// void alloc_keys_mem(u32 keys_count);
+	// void alloc_action_mem(u32 action_count);
+	// void alloc_axis_mem(u32 axis_count);
+	// void alloc_event_queue_mem(u32 event_count);
 };
