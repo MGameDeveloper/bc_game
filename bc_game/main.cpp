@@ -1,3 +1,4 @@
+#if 0
 #include "inc/bc_log.h"
 #include "inc/bc_window.h"
 #include "inc/bc_render.h"
@@ -186,3 +187,4 @@ int main(int argc, const char** argv)
 
 	return 0;
 }
+#endif

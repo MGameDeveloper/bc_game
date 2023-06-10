@@ -99,7 +99,7 @@ public:
 		bc_texture* texture = NULL,
 		const bc_uv& texture_uv = bc_uv(0.f, 0.f, 0.f, 0.f));
 
-	void clear(u8 r, u8 g, u8 b, u8 a);
+	void clear(u8 r = 0, u8 g = 0, u8 b = 0, u8 a = 0);
 	void submit();
 
 	static void enable_blend(bool should_blend);
